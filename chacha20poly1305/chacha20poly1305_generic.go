@@ -35,9 +35,16 @@ func (c *chacha20poly1305) sealGeneric(dst, nonce, plaintext, additionalData []b
 	}
 
 	var polyKey [32]byte
-	s, _ := chacha20.NewUnauthenticatedCipher(c.key[:], nonce)
-	s.XORKeyStream(polyKey[:], polyKey[:])
-	s.SetCounter(1) // set the counter to 1, skipping 32 bytes
+
+	// Build 16-byte nonce: 8 bytes zero + 8-byte actual nonce
+	var iv [16]byte
+	copy(iv[8:], nonce) // nonce is 8 bytes
+
+	s, _ := chacha20.NewUnauthenticatedCipher(c.key[:], iv[:])
+	s.XORKeyStream(polyKey[:], polyKey[:]) // derive poly1305 key from counter = 0
+
+	// Encrypt body using counter = 1
+	s.SetCounter(1)
 	s.XORKeyStream(ciphertext, plaintext)
 
 	p := poly1305.New(&polyKey)
