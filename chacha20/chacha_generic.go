@@ -24,7 +24,7 @@ const (
 	//
 	// Note that this is too short to be safely generated at random if the same
 	// key is reused more than 2³² times.
-	NonceSize = 8
+	NonceSize = 12
 
 	// NonceSizeX is the size of the nonce used with the XChaCha20 variant of
 	// this cipher, in bytes.
