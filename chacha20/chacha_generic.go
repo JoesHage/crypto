@@ -107,7 +107,6 @@ func newUnauthenticatedCipher(c *Cipher, key, nonce []byte) (*Cipher, error) {
 	c.nonce = [3]uint32{
 		binary.LittleEndian.Uint32(nonce[0:4]),
 		binary.LittleEndian.Uint32(nonce[4:8]),
-		binary.LittleEndian.Uint32(nonce[8:12]),
 	}
 	return c, nil
 }
